@@ -12,16 +12,18 @@ c => a
 -- change dependantjobs into an element
 select @jobs = replace(@jobs, ' => ', '<dependency>')
 select @jobs = replace(@jobs, @delimiter, '</dependency>'+@delimiter)
+-- then get teh jobs
 select @jobs = '<jobs><job>'+replace(@jobs,@delimiter ,'</job><job>')+'</job></jobs>'
 SELECT @xml = cast(@jobs as xml)
 SELECT @xml
-select @jobs
+--select @jobs
 
 --SELECT @xml = cast(('<jobs><job>'+replace(@jobs,@delimiter ,'</job><job>')+'</job></jobs>') as xml)
 --SELECT @xml
 select 
-  t.value('.','varchar(1)') as [jobs]
-from @xml.nodes('//jobs/job') as a(t)
+  jobs.job.value('.','varchar(1)') as [jobs],
+  jobs.job.query('dependency').value('.','varchar(1)') as deps
+from @xml.nodes('//jobs/job') as jobs(job)
 
 DECLARE @stringList AS TABLE(string varchar(max)) 
 INSERT INTO @stringList
