@@ -20,3 +20,15 @@ b => c
 c => 
 '
 EXEC dbo.OrderJobs @input 
+
+--step 5 
+select @input =
+
+'a => 
+b => c
+c => f
+d => a
+e => b
+f => 
+'
+EXEC dbo.OrderJobs @input 
