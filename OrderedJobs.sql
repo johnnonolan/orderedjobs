@@ -40,7 +40,7 @@ jobs.job.value('.','varchar(1)') <> '';
     SELECT 'Cannot self reference you''ll go blind!';
     RETURN
  END;
- BEGIN TRY
+ BEGIN TRY;
 WITH OrderedJobs (job, deps, level)
 AS
 (
