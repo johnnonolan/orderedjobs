@@ -37,9 +37,10 @@ jobs.job.value('.','varchar(1)') <> '';
 
  IF  EXISTS( SELECT 1 FROM @stringlist WHERE job = deps ) 
  BEGIN
-    RAISERROR ('Cannot self reference you''ll go blind!', 16, 2);
+    SELECT 'Cannot self reference you''ll go blind!';
     RETURN
  END;
+ BEGIN TRY
 WITH OrderedJobs (job, deps, level)
 AS
 (
@@ -61,7 +62,10 @@ AS
                        FOR
                          XML PATH('')), 1, 1, '')
                          
- 
+ END TRY
+ BEGIN CATCH
+    SELECT @retval = 'Circular dependencies: like sleeping with your cousin'
+ END CATCH
     SELECT @retval
 
 END
