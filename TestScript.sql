@@ -32,3 +32,13 @@ e => b
 f => 
 '
 EXEC dbo.OrderJobs @input 
+
+--step 6
+
+select @input = 
+
+'a => 
+b => 
+c => c
+'
+EXEC dbo.OrderJobs @input

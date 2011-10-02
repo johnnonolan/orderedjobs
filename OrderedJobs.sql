@@ -23,7 +23,6 @@ select @jobs = replace(@jobs, ' => ', '<dependency>')
 select @jobs = replace(@jobs, @delimiter, '</dependency>'+@delimiter)
 -- then get the jobs and change them
 select @jobs = '<jobs><job>'+replace(@jobs,@delimiter ,'</job><job>')+'</job></jobs>'
-print @jobs
 -- make me xml
 SELECT @xml = cast(@jobs as xml)
 
@@ -36,7 +35,11 @@ from @xml.nodes('//jobs/job') as jobs(job)
 where 
 jobs.job.value('.','varchar(1)') <> '';
 
-
+ IF  EXISTS( SELECT 1 FROM @stringlist WHERE job = deps ) 
+ BEGIN
+    RAISERROR ('Cannot self reference you''ll go blind!', 16, 2);
+    RETURN
+ END;
 WITH OrderedJobs (job, deps, level)
 AS
 (
